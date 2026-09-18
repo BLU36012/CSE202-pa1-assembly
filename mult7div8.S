@@ -8,9 +8,11 @@ mult7div8:
   cmpl    $-128, %eax      # check for overflow (less than -128)
   jl      .overflow         # if less than -128, jump to overflow
   movb    $0, (%rsi)       # set overflow to 0
-  sar     $3, %eax         # divide by 8 (arithmetic shift right)
+  jmp     .done            # jump over the overflow block
 .overflow:
   movb    $1, (%rsi)       # set overflow to 1
+.done:
+  sar     $3, %eax          # divide by 8 (arithmetic shift right)
   retq
 
 
