@@ -5,21 +5,23 @@ isPrime:
   jl      .not_prime        # if n < 2, jump to not_prime
   testl   $1, %edi          # check if n is even
   jz      .check_two        # if n is even, jump to check_two
-
+  movl    $3, %ecx          # %ecx = i = 3 (start checking from 3)
+  jmp     .loop               # jump to the loop to check for odd divisors
 .check_two:
   cmpl    $2, %edi          # compare n with 2
   je      .is_prime         # if n == 2, jump to is_prime
-  movl    $3, %ecx          # %ecx = i = 3 (start checking from 3)
+  jmp     .not_prime        # if n is even and not 2, jump to not_prime
 .loop:
   movl    %ecx, %esi        # %esi = i (temporary storage for i)
   imull   %ecx, %ecx        # %ecx = i * i
   cmpl    %edi, %ecx        # compare i * i with n
   jle     .inner_if          # if i * i <= n, jump to inner_if
-  jmp     .done              # if i * i <= n, jump to done
+  jmp     .is_prime          # if i * i > n, jump to is_prime
 .inner_if:
   movl  %esi, %ecx          # restore i from temporary storage %ecx = i
   movl   %edi, %eax         # %eax = n for division on next line
-  idivl   %edi               # divide n by i, quotient in %eax, remainder in %edx
+  cltd                       # sign extend %eax to %edx:%eax for division
+  idivl   %ecx               # divide n by i, quotient in %eax, remainder in %edx
   addl   $2, %ecx           # increment i by 2
   testl   %edx, %edx        # check if remainder is 0
   jz      .not_prime        # if n % i == 0, jump to not_prime
