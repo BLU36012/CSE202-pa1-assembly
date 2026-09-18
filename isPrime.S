@@ -1,6 +1,7 @@
 .global isPrime
 # n in %edi; result in %eax (1 = prime, 0 = not prime)
 isPrime:
+  
   ret
 
 

@@ -1,7 +1,17 @@
 .global mult7div8
 # a in %dil (signed char), overflow pointer in %rsi; result in %eax
 mult7div8:
-  ret
+  movsbl  %dil, %eax       # sign extend a to 32 bits
+  imul    $7, %eax         # multiply by 7
+  cmpl    $127, %eax       # check for overflow (greater than 127)
+  jg      .overflow         # if greater than 127, jump to overflow
+  cmpl    $-128, %eax      # check for overflow (less than -128)
+  jl      .overflow         # if less than -128, jump to overflow
+  movb    $0, (%rsi)       # set overflow to 0
+  sar     $3, %eax         # divide by 8 (arithmetic shift right)
+.overflow:
+  movb    $1, (%rsi)       # set overflow to 1
+  retq
 
 
 # char mult7div8(char a, char *overflow){
