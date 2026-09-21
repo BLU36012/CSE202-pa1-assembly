@@ -21,7 +21,7 @@ sqrt_recursive:
     cmpl    $0, %edi         # x-0 comparison
     jl      .negative1       # if x < 0, jump to negative1
     cmpl    $2, %edi         # if x < 2, jump to return x
-    jl      .base            #return x if x < 2
+    jl      .base            # return x if x < 2
     pushq   %rbx             # save %rbx on stack
     movl    %edi, %ebx       # %ebx = x
     sarl    $2, %edi         # %edi = x >> 2 (divide by 4)
@@ -30,9 +30,9 @@ sqrt_recursive:
     leal   1(%rax), %ecx          # %ecx = small_cand + 1 (large candidate)
     movl    %ecx, %edx       # %edx = large_cand
     imull   %ecx, %edx       # %ebx = large_cand * large_cand
-    cmpl    %ebx, %edx       # compare large_cand * large_cand with p
-    cmovle  %ecx, %eax       # if large_cand * large_cand > p, return small_cand
-    popq    %rbx                    # restore %rbx from stack
+    cmpl    %ebx, %edx       # compare large_cand * large_cand with x
+    cmovle  %ecx, %eax       # if large_cand * large_cand > x, return small_cand
+    popq    %rbx             # restore %rbx from stack
     jmp     .done
 .negative1:
     movl    $-1, %eax        # return -1 for negative input
