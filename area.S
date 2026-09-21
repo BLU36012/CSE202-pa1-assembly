@@ -5,33 +5,41 @@ area:
     addl    %esi, %eax       # %eax = a + b
     addl    %edx, %eax       # %eax = a + b + c
     shrl    $1, %eax         # %eax = (a + b + c) / 2 (left shift bivides by 2)
-    movl    %eax, %ebx       # %ebx = p
-    movl    %ebx, %ecx       # %ecx = p
+    movl    %eax, %ecx       # %ecx = p
     subl    %edi, %ecx       # %ecx = p - a
-    movl    %ebx, %edx       # %edx = p
-    subl    %esi, %edx       # %edx = p - b
-    movl    %ebx, %r8d        # %r8d = p
-    subl    %edi, %r8d       # %r8d = p - c
+    movl    %eax, %r8d       # %r8d = p
+    subl    %esi, %r8d       # %r8d = p - b
+    movl    %eax, %r9d       # %r8d = p
+    subl    %edx, %r9d       # %r8d = p - c
     imull   %ecx, %eax       # %eax = p * (p - a)
-    imull   %edx, %eax       # %eax = p * (p - a) * (p - b)
-    imull   %r8d, %eax       # %eax = p * (p - a) * (p - b) * (p - c)
+    imull   %r8d, %eax       # %eax = p * (p - a) * (p - b)
+    imull   %r9d, %eax       # %eax = p * (p - a) * (p - b) * (p - c)
+    movl    %eax, %edi        # move p * (p - a) * (p - b) * (p - c) to %edi for sqrt_recursive
+    call    sqrt_recursive   # call sqrt(p * (p - a) * (p - b) * (p - c))
+    retq
 sqrt_recursive:
-    cmpl    $0, %eax         # p-0 comparison
-    jl      .negative1       # if p < 0, jump to negative1
-    cmpl    $2, %eax         # if p < 2, jump to return p
-    jl      .done            #return p if p < 2
-    movl    %eax, %ebx       # %ebx = p (temp variable for recursive call)
-    shrl    $2, %ebx         # %ebx = p >> 2 (divide by 4)
-    call    sqrt_recursive   # recursive call to calculate r_sqrt(p >> 2)
-    shll    $1, %ebx         # %ebx = r_sqrt(p >> 2) << 1 (multiply by 2)
-    movl    %eax, %ebx       # %ebx = r_sqrt(p >> 2) << 1 (small candidate)
-    addl    $1, %ebx         # %ebx = small_cand + 1 (large candidate)
-    imull   %ebx, %ebx       # %ebx = large_cand * large_cand
-    cmpl    %eax, %ebx       # compare large_cand * large_cand with p
-    cmovg   %eax, %eax       # if large_cand * large_cand > p, return small_cand
-    cmpl    %eax, %ebx       # compare large_cand * large_cand with p
-    cmovle  %ebx, %eax       # if large_cand * large_cand <= p,move large_cand to %eax
+    cmpl    $0, %edi         # x-0 comparison
+    jl      .negative1       # if x < 0, jump to negative1
+    cmpl    $2, %edi         # if x < 2, jump to return x
+    jl      .base            #return x if x < 2
+    pushq   %rbx             # save %rbx on stack
+    movl    %edi, %ebx       # %ebx = x
+    sarl    $2, %edi         # %edi = x >> 2 (divide by 4)
+    call    sqrt_recursive   # recursive call to calculate r_sqrt(x >> 2)
+    shll    $1, %eax         # %ebx = r_sqrt(x >> 2) << 1 (multiply by 2)
+    leal   1(%rax), %ecx          # %ecx = small_cand + 1 (large candidate)
+    movl    %ecx, %edx       # %edx = large_cand
+    imull   %ecx, %edx       # %ebx = large_cand * large_cand
+    cmpl    %ebx, %edx       # compare large_cand * large_cand with p
+    cmovle  %ecx, %eax       # if large_cand * large_cand > p, return small_cand
+    popq    %rbx                    # restore %rbx from stack
     jmp     .done
+.negative1:
+    movl    $-1, %eax        # return -1 for negative input
+    retq
+.base:
+    movl    %edi, %eax       # return p for p < 2
+    retq
 .done:
     retq
 
