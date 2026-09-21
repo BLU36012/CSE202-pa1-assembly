@@ -2,8 +2,8 @@
 # v1 in %di, v2 in %si, v3 in %dx, v4 in %cx  (signed 16-bit); result in %ax
 # We are going to use %r8w and %r9w to hold first and second (signed 16-bit)
 secondMax:
-  movw    %di, %r8w       # first = v1
-  movw    %si, %r9w       # second = v2
+  movw    %di, %r8w       # %r8w = v1
+  movw    %si, %r9w       # %r9w = v2
     
   cmpw    %si, %di        # Compare v1 and v2
   cmovl   %si, %r8w       # If v1 < v2, first = v2

@@ -1,6 +1,20 @@
 .global area
 # a in %edi, b in %esi, c in %edx; result in %eax
 area:
+    movl    %edi, %eax       # %eax = a
+    addl    %esi, %eax       # %eax = a + b
+    addl    %edx, %eax       # %eax = a + b + c
+    shrl    $1, %eax         # %eax = (a + b + c) / 2 (left shift bivides by 2)
+    movl    %eax, %ebx       # %ebx = p
+    movl    %ebx, %ecx       # %ecx = p
+    subl    %edi, %ecx       # %ecx = p - a
+    movl    %ebx, %edx       # %edx = p
+    subl    %esi, %edx       # %edx = p - b
+    movl    %ebx, %r8d        # %r8d = p
+    subl    %edi, %r8d       # %r8d = p - c
+    imull   %ecx, %eax       # %eax = p * (p - a)
+    imull   %edx, %eax       # %eax = p * (p - a) * (p - b)
+    imull   %r8d, %eax       # %eax = p * (p - a) * (p - b) * (p - c)
     retq
 
 # int area(int a, int b, int c){
