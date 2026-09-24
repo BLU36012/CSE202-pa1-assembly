@@ -1,6 +1,9 @@
 binsearch(5, {1, 3, 5, 7, 9, 11, 13}) = 2
 binsearch(8, {1, 3, 5, 7, 9, 11, 13}) = -1
 mult7div8(9) = 7, overflow? false
+mult7div8(25) = -10, overflow? true
+mult7div8(-9) = -7, overflow? false
+mult7div8(-64) = 8, overflow? true
 area(6, 8, 10) = 24
 area(2, 2, 2) = 1
 area(3, 3, 3) = 2
