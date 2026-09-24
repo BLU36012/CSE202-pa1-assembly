@@ -4,7 +4,7 @@ gcd:
     cmpl    $0, %esi         # compare b with 0
     je      .base_case       # if b == 0, jump to base_case
     movl    %edi, %eax       # %eax = a
-    cdq                      # sign extend %eax to %edx:%eax for division
+    cdq                      # sign extend %eax to %edx
     idivl   %esi             # %eax = a / b, %edx = a % b
     movl    %esi, %edi       # %edi = b (1st argument for recursive call)
     movl    %edx, %esi       # %esi = a % b (2nd argument for recursive call)

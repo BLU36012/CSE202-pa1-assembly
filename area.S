@@ -27,7 +27,7 @@ sqrt_recursive:
     sarl    $2, %edi         # %edi = x >> 2 (divide by 4)
     call    sqrt_recursive   # recursive call to calculate r_sqrt(x >> 2)
     shll    $1, %eax         # %ebx = r_sqrt(x >> 2) << 1 (multiply by 2)
-    leal   1(%rax), %ecx          # %ecx = small_cand + 1 (large candidate)
+    leal    1(%rax), %ecx    # %ecx = small_cand + 1 (large candidate)
     movl    %ecx, %edx       # %edx = large_cand
     imull   %ecx, %edx       # %ebx = large_cand * large_cand
     cmpl    %ebx, %edx       # compare large_cand * large_cand with x

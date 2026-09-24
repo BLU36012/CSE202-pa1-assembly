@@ -4,7 +4,6 @@
 secondMax:
   movw    %di, %r8w       # %r8w = v1
   movw    %si, %r9w       # %r9w = v2
-    
   cmpw    %si, %di        # Compare v1 and v2
   cmovl   %si, %r8w       # If v1 < v2, first = v2
   cmovl   %di, %r9w       # If v1 < v2, second = v1
