@@ -8,15 +8,15 @@ secondMax:
   cmovl   %si, %r8w       # If v1 < v2, first = v2
   cmovl   %di, %r9w       # If v1 < v2, second = v1
   cmpw    %dx, %r8w       # Compare v3 and first
-  cmovg   %r8w, %r9w      # If v3 > first, second = first
-  cmovg   %dx, %r8w       # If v3 > first, first = v3
+  cmovl   %r8w, %r9w      # If v3 > first, second = first
+  cmovl  %dx, %r8w       # If v3 > first, first = v3
   cmpw    %dx, %r9w       # Compare v3 and second
-  cmovg   %dx, %r9w       # If v3 > second, second = v3
+  cmovl   %dx, %r9w       # If v3 > second, second = v3
   cmpw    %cx, %r8w       # Compare v4 and first
-  cmovg   %r8w, %r9w      # If v4 > first, second = first
-  cmovg   %cx, %r8w       # If v4 > first, first = v4
+  cmovl   %r8w, %r9w      # If v4 > first, second = first
+  cmovl   %cx, %r8w       # If v4 > first, first = v4
   cmpw    %cx, %r9w       # Compare v4 and second
-  cmovg   %cx, %r9w       # If v4 > second, second = v4
+  cmovl   %cx, %r9w       # If v4 > second, second = v4
   movw    %r9w, %ax       # Move second to result
   retq
 
