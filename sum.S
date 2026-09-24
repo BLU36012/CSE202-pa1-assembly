@@ -5,6 +5,14 @@
 #   offset 8  : value
 #   offset 16 : next
 sum:
+    xorl    %eax, %eax          # total = 0
+.loop:
+    testq   %rdi, %rdi          # check if ptr == NULL
+    jz      .done               # if ptr == NULL, jump to done
+    addq    8(%rdi), %rax       # %rax += ptr->value
+    movq    16(%rdi), %rdi      # %rdi = ptr->next
+    jmp     .loop               # jump back to top of loop
+.done:
     retq
 
 
